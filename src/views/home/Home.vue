@@ -3,45 +3,14 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view />
-    <tab-control :titles="['流行','新款','精选']" class="tab-control"></tab-control>
-
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
-    <p>我是来添数的</p>
+    <scroll class="content">
+      <home-swiper :banners="banners"></home-swiper>
+      <recommend-view :recommends="recommends"></recommend-view>
+      <feature-view />
+      <tab-control :titles="['流行','新款','精选']" class="tab-control" @tabClick="tabClick"></tab-control>
+      <goods-list :goods="showGoods" />
+    </scroll>
+    <back-top/>
   </div>
 </template>
 
@@ -52,6 +21,9 @@ import FeatureView from "./homechildren/FeatureView";
 
 import NavBar from "../../components/common/navbar/NavBar";
 import TabControl from "../../components/context//tabControl/TabControl";
+import GoodsList from "../../components/context/goods/GoodsList"
+import Scroll from '../../components/common/scroll/Scroll.vue';
+import BackTop from '../../components/common/backtop/BackTop.vue';
 
 import { getHomeMultidata, getHomeDate } from "../../network/home";
 export default {
@@ -62,6 +34,9 @@ export default {
     RecommendView,
     FeatureView,
     TabControl,
+    GoodsList,
+    Scroll,
+    BackTop,
   },
   data() {
     return {
@@ -72,6 +47,7 @@ export default {
         'new': { page: 0, list: [] },
         'sell':{ page: 0, list: [] },
       },
+      currentType:'pop'
     };
   },
   created() {
@@ -81,6 +57,9 @@ export default {
     this.mgetHomeDate('sell');
   },
   methods: {
+    /**
+   * 网络请求相关的数据
+   */
     mgetHomeMultidata() {
       getHomeMultidata().then((res) => {
         // console.log(res);
@@ -91,16 +70,37 @@ export default {
     mgetHomeDate(type){
       let page = this.goods[type].page + 1
       getHomeDate(type, page).then(res=>{
-        console.log(res);
         this.goods[type].list.push(...res.data.list)
         this.goods[type].page += 1
       })
-    }
+    },
+    /**
+     * 操作有关的methods
+     */
+    tabClick (index) {
+      switch (index) {
+        case 0:
+          this.currentType='pop'
+          break;
+        case 1:
+          this.currentType='new'
+          break;
+        case 2 :
+          this.currentType='sell'
+          break;
+      }
+    },
+
   },
+  computed:{
+      showGoods () {
+        return this.goods[this.currentType].list
+      }
+    }
 };
 </script>
 
-<style>
+<style scoped>
 .home-nav {
   background-color: var(--color-tint);
   color: white;
@@ -111,10 +111,25 @@ export default {
   z-index: 9;
 }
 #home {
-  margin-top: 44px;
+  height: 100vh;
+  position: relative;
 }
 .tab-control {
   position: sticky;
-  top: 44px;
+  top: 43px;
+  z-index: 9;
 }
+.content {
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+}
+/* .content {
+  height: calc(100% - 93px);
+  overflow: hidden;
+  margin-top: 44px;
+} */
 </style>

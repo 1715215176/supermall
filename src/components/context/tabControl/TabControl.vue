@@ -25,7 +25,8 @@ export default {
   },
   methods: {
     itemClick(index){
-      this.counter=index
+      this.counter=index;
+      this.$emit('tabClick',index)
     }
   },
 }
