@@ -3,14 +3,18 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content">
+    <scroll class="content" :probeType="3"
+     @scroll="scrollcontent"
+     ref="scroll"
+     :pullUpLoad='true'
+     @pullingUp='MoreLoad'>
       <home-swiper :banners="banners"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
       <tab-control :titles="['流行','新款','精选']" class="tab-control" @tabClick="tabClick"></tab-control>
       <goods-list :goods="showGoods" />
     </scroll>
-    <back-top/>
+    <back-top v-show="BackTopShow"/>
   </div>
 </template>
 
@@ -47,7 +51,8 @@ export default {
         'new': { page: 0, list: [] },
         'sell':{ page: 0, list: [] },
       },
-      currentType:'pop'
+      currentType:'pop',
+      BackTopShow : false
     };
   },
   created() {
@@ -55,6 +60,13 @@ export default {
     this.mgetHomeDate('pop');
     this.mgetHomeDate('new');
     this.mgetHomeDate('sell');
+  },
+  mounted() {
+    // 监听图片的加载
+    const refresh = this.debounce(this.$refs.scroll.refresh,300)
+    this.$bus.$on('itemimageload',()=>{
+      refresh()
+    })
   },
   methods: {
     /**
@@ -90,6 +102,22 @@ export default {
           break;
       }
     },
+    scrollcontent(position){
+      this.BackTopShow = (-position.y) > 1000
+    },
+    MoreLoad(){
+      this.mgetHomeDate(this.currentType)
+    },
+    debounce(func , delay){
+      let timer =  null;
+      return function (...args) {
+        if(timer) clearInterval(timer)
+        timer = setTimeout(() => {
+          func.apply(this,args)
+        }, delay);
+      }
+    }
+
 
   },
   computed:{
