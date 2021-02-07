@@ -56,15 +56,16 @@ export default {
       this.$emit("scroll", position);
     });
     // 上啦加载更多
-    this.scroll.on("pullingUp", () => {
+    if(this.pullUpLoad){
+      this.scroll.on("pullingUp", () => {
       self.satrY = self.scroll.startY;
       // self.scroll.finishPullUp();
       this.$emit('pullingUp')
     });
+    }
   },
   methods: {
     refresh(){
-      console.log('------');
     this.$refs.scroll &&  this.scroll.refresh()
     }
   },
