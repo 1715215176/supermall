@@ -71,6 +71,7 @@ export default {
       tabOffsetTop: 0,
       // 是否吸顶
       isFixed: false,
+      saveY : 0
     };
   },
   created() {
@@ -86,6 +87,13 @@ export default {
       refresh();
     });
     // 监听tabControl的吸顶效果
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY,0)
+    this.$refs.scroll.refresh()
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.getScrollY()
   },
   methods: {
     /**
@@ -139,6 +147,10 @@ export default {
       return this.goods[this.currentType].list;
     },
   },
+  destroyed() {
+    console.log('销毁');
+  },
+
 };
 </script>
 

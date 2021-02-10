@@ -64,11 +64,24 @@ export default {
     });
     }
   },
-  methods: {
-    refresh(){
-    this.$refs.scroll &&  this.scroll.refresh()
+    methods: {
+    // 第一个参数x轴的距离,第二个参数y轴的距离,第三个参数是延迟时间
+    scrollTo(x, y, time = 500) {
+      this.scroll && this.scroll.scrollTo(x, y, time);
+    },
+    // 并且是为了保证this.scroll存在才执行
+    refresh() {
+      this.scroll && this.scroll.refresh();
+    },
+    // 获取滚动的纵向距离
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
+    },
+    // 滚动到指定元素
+    scrollToElement(el, time) {
+      this.scroll.scrollToElement(el, time);
     }
-  },
+  }
 };
 </script>
 

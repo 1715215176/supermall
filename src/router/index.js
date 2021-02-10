@@ -4,6 +4,7 @@ const Home = () => import('../views/home/Home.vue')
 const Cart = () => import('../views/cart/Cart.vue')
 const Category = () => import('../views/category/Category.vue')
 const Profile = () => import('../views/profile/Profile.vue')
+const Detail = () => import ('../views/detail/Detail.vue')
 const originalPush = vueRouter.prototype.push
 vueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -29,6 +30,11 @@ const routes = [
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    // 动态路由
+    path: '/detail/:id',
+    component: Detail
   }
 ]
 const router = new vueRouter({

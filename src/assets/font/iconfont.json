@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7534258",
+      "name": "完成",
+      "font_class": "wancheng",
+      "unicode": "e782",
+      "unicode_decimal": 59266
+    },
+    {
+      "icon_id": "10907847",
+      "name": "back",
+      "font_class": "back",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
       "icon_id": "6978123",
       "name": "返回顶部",
       "font_class": "fanhuidingbu",

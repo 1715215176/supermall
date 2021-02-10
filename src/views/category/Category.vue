@@ -127,11 +127,11 @@ export default {
     })
     // 时时监听滚动
     this.scroll.on('scroll',(position)=>{
-      console.log(position);
+      // console.log(position);
     })
     // 上啦加载更多
     this.scroll.on('pullingUp',() => {
-      console.log('上啦加载更多');
+      // console.log('上啦加载更多');
     })
   },
 }
