@@ -27,7 +27,7 @@
       ></tab-control>
       <goods-list :goods="showGoods" />
     </scroll>
-    <back-top v-show="BackTopShow" />
+    <back-top v-show="BackTopShow" @topBack='topBack' />
   </div>
 </template>
 
@@ -43,7 +43,7 @@ import Scroll from "../../components/common/scroll/Scroll.vue";
 import BackTop from "../../components/common/backtop/BackTop.vue";
 
 import { getHomeMultidata, getHomeDate } from "../../network/home";
-import { debounce } from "../../common/utils";
+import {itemImgListenerMixin} from '../../common/mixin'
 export default {
   name: "Home",
   components: {
@@ -56,6 +56,7 @@ export default {
     Scroll,
     BackTop,
   },
+  mixins : [itemImgListenerMixin],
   data() {
     return {
       banners: [],
@@ -71,7 +72,7 @@ export default {
       tabOffsetTop: 0,
       // 是否吸顶
       isFixed: false,
-      saveY : 0
+      saveY : 0 ,
     };
   },
   created() {
@@ -81,11 +82,6 @@ export default {
     this.mgetHomeDate("sell");
   },
   mounted() {
-    // 监听图片的加载
-    const refresh = debounce(this.$refs.scroll.refresh, 300);
-    this.$bus.$on("itemimageload", () => {
-      refresh();
-    });
     // 监听tabControl的吸顶效果
   },
   activated() {
@@ -93,7 +89,11 @@ export default {
     this.$refs.scroll.refresh()
   },
   deactivated() {
+    // 1.保存y值
     this.saveY = this.$refs.scroll.getScrollY()
+    // 2.取消全局事件的监听
+    this.$bus.$off('itemimageload', this.itemImgListener)
+
   },
   methods: {
     /**
@@ -128,6 +128,7 @@ export default {
           this.currentType = "sell";
           break;
       }
+      // 让俩个tabcontrol保持一zhi
       this.$refs.tabControl1.counter = index
       this.$refs.tabControl2.counter = index
     },
@@ -141,6 +142,9 @@ export default {
     homeSwiperLoad() {
       this.tabOffsetTop = this.$refs.tabControl1.$el.offsetTop;
     },
+    topBack(){
+      this.$refs.scroll.scrollTo(0, 0 ,1000)
+    }
   },
   computed: {
     showGoods() {

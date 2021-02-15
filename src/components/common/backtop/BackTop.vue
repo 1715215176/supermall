@@ -1,12 +1,17 @@
 <template>
-  <div class="topback">
+  <div class="topback" @click="topBack">
     <i class="iconfont icon-fanhuidingbu"></i>
   </div>
 </template>
 
 <script>
 export default {
-  name:"BackTop"
+  name:"BackTop",
+  methods: {
+    topBack(){
+      this.$emit('topBack')
+    }
+  },
 }
 </script>
 
